@@ -1,3 +1,5 @@
+<!-- @NOTE This is the root Prequel Vue instance -->
+
 <template>
     <!--
         Order of element attributes:
@@ -25,10 +27,10 @@
                 @collapseSideBar="sideBarCollapseHandler"/>
 
         <Paginator
-                v-if="table.currentActiveName.length !== 0 && !prequel.error && view.modus.mode === view.modus.enum.BROWSE"
-                :currentPage="table.pagination.currentPage"
-                :numberOfPages="table.pagination.numberOfPages"
-                @pageChange="changePage($event)"/>
+            v-if="table.currentActiveName.length !== 0 && !prequel.error && view.modus.mode === view.modus.enum.BROWSE"
+            :currentPage="table.pagination.currentPage"
+            :numberOfPages="table.pagination.numberOfPages"
+            @pageChange="changePage($event)"/>
 
         <div v-else class="block w-1 h-1 my-2"></div>
 
@@ -64,15 +66,15 @@
 
 <script>
   import axios        from 'axios';
-  import Header       from './components/Header/Header';
-  import SideBar      from './components/SideBar/SideBar';
-  import MainContent  from './components/MainContent/MainContent';
-  import PrequelError from './components/Elements/PrequelError';
-  import Paginator    from './components/MainContent/Table/Paginator';
-  import SwitchMode   from './components/Elements/SwitchMode';
+  import Header       from '../Header/Header';
+  import SideBar      from '../SideBar/SideBarWrapper';
+  import MainContent  from '../MainContent/ContentWrapper';
+  import PrequelError from './PrequelError';
+  import Paginator    from '../MainContent/BrowseMode/Table/Paginator';
+  import SwitchMode   from '../Elements/SwitchMode';
 
   export default {
-    name      : 'App',
+    name      : 'Prequel',
     components: {
       SwitchMode,
       Paginator,
@@ -87,7 +89,7 @@
 
         /**
          |---------------------------------------------
-         | Holds data that comes directly from Prequel.
+         | Holds data that comes directly from the back-end.
          |---------------------------------------------
          */
         prequel: {
@@ -96,6 +98,7 @@
           data         : window.Prequel.data,        // Object
           env          : window.Prequel.env,         // Object
           flat         : window.Prequel.flat,        // Array
+          lang         : window.Prequel.i18n,        // Object
           api          : {
             database: '',
           },
@@ -151,8 +154,8 @@
           welcomeShown: false,
           params      : new URLSearchParams(window.location.search),
           menu        : {
-            active_header_class: 'text-indigo-600',
-            active_item_class  : 'text-indigo-400',
+            active_header_color: '#5a67d8',
+            active_item_color  : '#7f9cf5',
           },
         },
       };
@@ -244,20 +247,29 @@
           // Menu header with database name
           let databaseEl = document.querySelector(`li[value=${this.view.params.get('database')}]`);
 
-          // Menu item with table name
-          let tableEl = document.querySelector(`li[value=${this.view.params.get('table')}]`);
+          // Menu items with table name
+          let tableElements = document.querySelectorAll(`li[value=${this.view.params.get('table')}]`);
+          let tableEl;
+
+          tableElements.forEach((tableElement) => {
+              let tableName = `${this.view.params.get('database')}.${this.view.params.get('table')}`;
+              if(tableElement.title === tableName) {
+                  tableEl = tableElement;
+              }
+          });
 
           // All 'li' elements
           let menuItemElements = document.getElementsByTagName('li');
 
+          // Reset other inactive items to their defaults.
           // Pretty costly operation, @TODO Refactor
           for (let menuElement of menuItemElements) {
-            if (menuElement && menuElement.classList.contains(this.view.menu.active_item_class)) {
-              menuElement.classList.remove(this.view.menu.active_item_class);
+            if (menuElement && menuElement.style.color !== this.view.menu.active_header_color) {
+              menuElement.style.color = '';
             }
 
-            if (menuElement && menuElement.classList.contains(this.view.menu.active_header_class)) {
-              menuElement.classList.remove(this.view.menu.active_header_class);
+            if (menuElement && menuElement.style.color !== this.view.menu.active_item_color) {
+              menuElement.style.color = '';
             }
           }
 
@@ -266,8 +278,8 @@
             databaseEl.click();
           }
 
-          databaseEl.classList.add(this.view.menu.active_header_class);
-          tableEl.classList.add(this.view.menu.active_item_class);
+          databaseEl.style.color = this.view.menu.active_header_color;
+          tableEl.style.color    = this.view.menu.active_item_color;
         }
       },
 

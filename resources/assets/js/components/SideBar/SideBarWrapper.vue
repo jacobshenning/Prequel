@@ -6,7 +6,7 @@
                    list="tableSearch"
                    autocomplete="on"
                    @keyup.enter="$emit('searchingForTable', $event)"
-                   placeholder="Look for table...">
+                   :placeholder="trans('side_bar.look_for_table')">
 
             <datalist id="tableSearch">
                 <option v-for="table in tableFlat"
@@ -20,8 +20,8 @@
 </template>
 
 <script>
-  import Accordion from './Accordion';
-  import TableMenu from './TableMenu';
+  import Accordion from './Menu/Accordion';
+  import TableMenu from './Menu/TableMenu';
 
   export default {
     name      : 'SideBar',

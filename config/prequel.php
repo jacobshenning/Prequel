@@ -15,10 +15,21 @@ return [
 
     'enabled' => env('PREQUEL_ENABLED', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Prequel Locale : string
+    |--------------------------------------------------------------------------
+    |
+    | Choose what language Prequel should display in.
+    |
+    */
+
+    'locale'  => env('APP_LOCALE', 'en'),
+
 
     /*
     |--------------------------------------------------------------------------
-    | Prequel Path : string
+    | Prequel Path
     |--------------------------------------------------------------------------
     |
     | The path where Prequel will be residing. Note that this does not affect
