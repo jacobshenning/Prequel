@@ -30,12 +30,13 @@ import {
   faEye,
   faWrench,
   faRunning,
+  faBook,
 }                              from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon}       from '@fortawesome/vue-fontawesome';
 
 library.add(faDatabase, faTable, faChevronCircleUp, faSearchPlus, faTools,
     faGlasses, faAsterisk, faAdjust, faExclamationTriangle, faEye, faWrench,
-    faRunning);
+    faRunning, faBook);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

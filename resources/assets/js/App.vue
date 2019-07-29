@@ -22,8 +22,8 @@
                 @resetSearchInTable="checkUrlParameters"
                 @shouldBeLoading="table.loading = true"
                 @enhanceReadability="readabilityEnhancer"
-                @collapseSideBar="sideBarCollapseHandler"/>
-
+                @collapseSideBar="sideBarCollapseHandler"
+                @toggleHistory="historyCollapseHandler"/>
         <Paginator
                 v-if="table.currentActiveName.length !== 0 && !prequel.error && view.modus.mode === view.modus.enum.BROWSE"
                 :currentPage="table.pagination.currentPage"
@@ -44,7 +44,7 @@
                              @tableSelect="getTableData($event)"/>
                 </transition>
 
-                <MainContent class="table-wrapper"
+                <MainContent v-if="view.history" class="table-wrapper"
                              :class="view.collapsed ? 'main-content-collapsed' : 'main-content-expanded'"
                              :mode="view.modus.mode"
                              :readability="view.readability"
@@ -147,6 +147,7 @@
             mode: 0,
           },
           collapsed   : false,
+          history     : false,
           readability : true,
           welcomeShown: false,
           params      : new URLSearchParams(window.location.search),
@@ -233,6 +234,14 @@
         if (!this.view.collapsed) {
           window.setTimeout(this.setActiveTable, secsBeforeAction);
         }
+      },
+
+      /**
+       | Handle actions when history collapses or expands.
+       */
+      historyCollapseHandler: function() {
+        this.view.history = !this.view.history;
+        window.localStorage.setItem('showHistory', this.view.history);
       },
 
       /**

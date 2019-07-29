@@ -91,6 +91,11 @@
                                        :class="showSideBar ? 'chevron-point-left' : 'chevron-point-right'"
                                        icon="chevron-circle-up"/>&nbsp;
                 </button>
+                <button :class="history ? 'history-button-enabled' : 'history-button-disabled'"
+                        :title="`View history (${history ? 'Enabled' : 'Disabled'})`"
+                        @click="historyButtonHandler">
+                    <font-awesome-icon class="ml-1" icon="book"/>&nbsp;
+                </button>
             </div>
         </div>
         <span class="header-bottom"></span>
@@ -117,6 +122,7 @@
         sideBarStatusText: 'Collapse',
         showSideBar      : false,
         readability      : true,
+        history          : false,
 
         view: {
           darkMode: false,
@@ -279,6 +285,15 @@
         else {
           document.body.classList.remove('theme-dark');
         }
+      },
+
+      /**
+       | Handles history button actions
+       | Emits event to toggle history bar
+       */
+      historyButtonHandler: function() {
+        this.history = !this.history;
+        this.$emit('toggleHistory');
       },
     },
   };
@@ -567,6 +582,28 @@
                 }
 
                 .readability-button-disabled {
+                    color: #2d3748;
+                    background-color: transparent;
+                    transition: 0.5s ease;
+
+                    &:hover {
+                        background-color: var(--button-background-hover);
+                        transition: 0.5s ease;
+                    }
+                }
+
+                .history-button-enabled {
+                    color: #fff;
+                    background-color: var(--button-background);
+                    transition: 0.5s ease;
+
+                    &:hover {
+                        background-color: var(--button-background-hover);
+                        transition: 0.5s ease;
+                    }
+                }
+
+                .history-button-disabled {
                     color: #2d3748;
                     background-color: transparent;
                     transition: 0.5s ease;
